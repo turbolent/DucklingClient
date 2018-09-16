@@ -235,6 +235,56 @@ final class DucklingClientTests: XCTestCase {
         )
     }
 
+    func testQuantity() throws {
+        try expectParse(
+            "five kg",
+            [
+                Entity(dimension: .quantity,
+                       body: "five kg",
+                       start: 0, end: 7,
+                       value: .quantity(.single(SingleQuantityValue(value: 5000, unit: .defined(.gram)))))
+            ]
+        )
+    }
+
+    func testQuantityUnder() throws {
+        try expectParse(
+            "less than 5 kg",
+            [
+                Entity(dimension: .quantity,
+                       body: "less than 5 kg",
+                       start: 0, end: 14,
+                       value: .quantity(.under(SingleQuantityValue(value: 5000, unit: .defined(.gram)))))
+            ]
+        )
+    }
+
+    func testQuantityAbove() throws {
+        try expectParse(
+            "more than 5 kg",
+            [
+                Entity(dimension: .quantity,
+                       body: "more than 5 kg",
+                       start: 0, end: 14,
+                       value: .quantity(.above(SingleQuantityValue(value: 5000, unit: .defined(.gram)))))
+            ]
+        )
+    }
+
+    func testQuantityBetween() throws {
+        try expectParse(
+            "between 4 kg and 5 kg",
+            [
+                Entity(dimension: .quantity,
+                       body: "between 4 kg and 5 kg",
+                       start: 0, end: 21,
+                       value: .quantity(.between(
+                           SingleQuantityValue(value: 4000, unit: .defined(.gram)),
+                           SingleQuantityValue(value: 5000, unit: .defined(.gram)))))
+            ]
+        )
+    }
+
     private func expectParse(_ sentence: String, _ expectedEntities: [Entity]) throws {
         let expectiation = self.expectation(description: "completion is called")
 
@@ -274,6 +324,9 @@ final class DucklingClientTests: XCTestCase {
         ("testDistanceAbove", testDistanceAbove),
         ("testDistanceBelow", testDistanceBelow),
         ("testEmail", testEmail),
-        ("testURL", testURL)
+        ("testURL", testURL),
+        ("testQuantity", testQuantity),
+        ("testQuantityUnder", testQuantityUnder),
+        ("testQuantityAbove", testQuantityAbove)
     ]
 }

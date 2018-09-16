@@ -11,6 +11,7 @@ public enum DecodingError: Error {
     case invalidTimeGrain(String)
     case missingIntervalProperties(KeyedDecodingContainer<ValueCodingKeys>)
     case invalidDistanceUnit(String)
+    case invalidQuantityUnit(String)
 }
 
 
@@ -99,14 +100,20 @@ private func decodeValue(
         let time = try decodeSingleTime(valueContainer: valueContainer)
         return .time(.single(time))
     case (.time, .interval?):
-        let time = try decodeTimeInterval(valueContainer: valueContainer)
+        let time = try decodeIntervalTime(valueContainer: valueContainer)
         return .time(time)
     case (.distance, .value?):
         let distance = try decodeSingleDistance(valueContainer: valueContainer)
         return .distance(.single(distance))
     case (.distance, .interval?):
-        let time = try decodeDistanceInterval(valueContainer: valueContainer)
+        let time = try decodeIntervalDistance(valueContainer: valueContainer)
         return .distance(time)
+    case (.quantity, .value?):
+        let quantity = try decodeSingleQuantity(valueContainer: valueContainer)
+        return .quantity(.single(quantity))
+    case (.quantity, .interval?):
+        let quantity = try decodeIntervalQuantity(valueContainer: valueContainer)
+        return .quantity(quantity)
     case (.numeral, _):
         return try decodeNumeral(valueContainer: valueContainer)
     case (.ordinal, _):

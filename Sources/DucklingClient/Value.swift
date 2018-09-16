@@ -8,6 +8,7 @@ public enum Value: Equatable {
     case numeral(Double)
     case email(String)
     case url(String)
+    case quantity(QuantityValue)
 }
 
 public indirect enum TimeValue: Equatable {
@@ -16,6 +17,7 @@ public indirect enum TimeValue: Equatable {
     case before(SingleTimeValue)
     case between(SingleTimeValue, SingleTimeValue)
 }
+
 
 public enum SingleTimeValue: Equatable {
     case year(DateComponents)
@@ -27,6 +29,7 @@ public enum SingleTimeValue: Equatable {
     case date(DateComponents)
 }
 
+
 public indirect enum DistanceValue: Equatable {
     case single(SingleDistanceValue)
     case above(SingleDistanceValue)
@@ -34,7 +37,20 @@ public indirect enum DistanceValue: Equatable {
     case between(SingleDistanceValue, SingleDistanceValue)
 }
 
+
 public struct SingleDistanceValue: Equatable {
     public let value: Double
     public let unit: DistanceUnit
+}
+
+public indirect enum QuantityValue: Equatable {
+    case single(SingleQuantityValue)
+    case above(SingleQuantityValue)
+    case under(SingleQuantityValue)
+    case between(SingleQuantityValue, SingleQuantityValue)
+}
+
+public struct SingleQuantityValue: Equatable {
+    public let value: Double
+    public let unit: QuantityUnit
 }

@@ -99,7 +99,7 @@ private func decodeSecond(
 }
 
 
-private func decodeBefore(
+private func decodeBeforeTime(
     valueContainer: KeyedDecodingContainer<ValueCodingKeys>
     ) throws -> TimeValue {
     let singleTime = try decodeSingleTime(valueContainer: valueContainer)
@@ -107,7 +107,7 @@ private func decodeBefore(
 }
 
 
-internal func decodeAfter(
+internal func decodeAfterTime(
     valueContainer: KeyedDecodingContainer<ValueCodingKeys>
     ) throws -> TimeValue {
     let singleTime = try decodeSingleTime(valueContainer: valueContainer)
@@ -115,7 +115,7 @@ internal func decodeAfter(
 }
 
 
-internal func decodeTimeBetween(
+internal func decodeBetweenTime(
     fromValueContainer: KeyedDecodingContainer<ValueCodingKeys>,
     toValueContainer: KeyedDecodingContainer<ValueCodingKeys>
     ) throws -> TimeValue {
@@ -154,8 +154,7 @@ internal func decodeSingleTime(
 }
 
 
-
-internal func decodeTimeInterval(
+internal func decodeIntervalTime(
     valueContainer: KeyedDecodingContainer<ValueCodingKeys>
 ) throws -> TimeValue {
 
@@ -171,7 +170,7 @@ internal func decodeTimeInterval(
             keyedBy: ValueCodingKeys.self,
             forKey: .to
         )
-        return try decodeTimeBetween(
+        return try decodeBetweenTime(
             fromValueContainer: fromValueContainer,
             toValueContainer: toValueContainer
         )
@@ -180,13 +179,13 @@ internal func decodeTimeInterval(
             keyedBy: ValueCodingKeys.self,
             forKey: .from
         )
-        return try decodeAfter(valueContainer: fromValueContainer)
+        return try decodeAfterTime(valueContainer: fromValueContainer)
     } else if hasTo {
         let toValueContainer = try valueContainer.nestedContainer(
             keyedBy: ValueCodingKeys.self,
             forKey: .to
         )
-        return try decodeBefore(valueContainer: toValueContainer)
+        return try decodeBeforeTime(valueContainer: toValueContainer)
     }
 
     throw DecodingError.missingIntervalProperties(valueContainer)

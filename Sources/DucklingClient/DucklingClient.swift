@@ -1,7 +1,9 @@
 import Foundation
 import Result
 
+
 internal let calendarUserInfoKey = CodingUserInfoKey(rawValue: "calendar")!
+
 
 public final class DucklingClient {
 

@@ -1,5 +1,5 @@
 
-public enum DistanceUnit: String {
+public enum DistanceUnit: String, Equatable {
     case centimetre
     case foot
     case inch

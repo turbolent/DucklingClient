@@ -1,34 +1,33 @@
 
-
-private func decodeBelowDistance(
+private func decodeUnderQuantity(
     valueContainer: KeyedDecodingContainer<ValueCodingKeys>
-) throws -> DistanceValue {
-    let singleDistance = try decodeSingleDistance(valueContainer: valueContainer)
-    return .below(singleDistance)
+) throws -> QuantityValue {
+    let singleQuantity = try decodeSingleQuantity(valueContainer: valueContainer)
+    return .under(singleQuantity)
 }
 
 
-private func decodeAboveDistance(
+private func decodeAboveQuantity(
     valueContainer: KeyedDecodingContainer<ValueCodingKeys>
-) throws -> DistanceValue {
-    let singleDistance = try decodeSingleDistance(valueContainer: valueContainer)
-    return .above(singleDistance)
+) throws -> QuantityValue {
+    let singleQuantity = try decodeSingleQuantity(valueContainer: valueContainer)
+    return .above(singleQuantity)
 }
 
 
-private func decodeBetweenDistance(
+private func decodeBetweenQuantity(
     fromValueContainer: KeyedDecodingContainer<ValueCodingKeys>,
     toValueContainer: KeyedDecodingContainer<ValueCodingKeys>
-) throws -> DistanceValue {
-    let fromValue = try decodeSingleDistance(valueContainer: fromValueContainer)
-    let toValue = try decodeSingleDistance(valueContainer: toValueContainer)
+) throws -> QuantityValue {
+    let fromValue = try decodeSingleQuantity(valueContainer: fromValueContainer)
+    let toValue = try decodeSingleQuantity(valueContainer: toValueContainer)
     return .between(fromValue, toValue)
 }
 
 
-internal func decodeSingleDistance(
+internal func decodeSingleQuantity(
     valueContainer: KeyedDecodingContainer<ValueCodingKeys>
-) throws -> SingleDistanceValue {
+) throws -> SingleQuantityValue {
 
     let value = try valueContainer.decode(
         Double.self,
@@ -40,17 +39,17 @@ internal func decodeSingleDistance(
         forKey: ValueCodingKeys.unit
     )
 
-    guard let unit = DistanceUnit(rawValue: unitString) else {
-        throw DecodingError.invalidDistanceUnit(unitString)
+    guard let unit = QuantityUnit(rawValue: unitString) else {
+        throw DecodingError.invalidQuantityUnit(unitString)
     }
 
-    return SingleDistanceValue(value: value, unit: unit)
+    return SingleQuantityValue(value: value, unit: unit)
 }
 
 
-internal func decodeIntervalDistance(
+internal func decodeIntervalQuantity(
     valueContainer: KeyedDecodingContainer<ValueCodingKeys>
-) throws -> DistanceValue {
+) throws -> QuantityValue {
 
     let hasFrom = valueContainer.contains(.from)
     let hasTo = valueContainer.contains(.to)
@@ -64,7 +63,7 @@ internal func decodeIntervalDistance(
             keyedBy: ValueCodingKeys.self,
             forKey: .to
         )
-        return try decodeBetweenDistance(
+        return try decodeBetweenQuantity(
             fromValueContainer: fromValueContainer,
             toValueContainer: toValueContainer
         )
@@ -73,13 +72,13 @@ internal func decodeIntervalDistance(
             keyedBy: ValueCodingKeys.self,
             forKey: .from
         )
-        return try decodeAboveDistance(valueContainer: fromValueContainer)
+        return try decodeAboveQuantity(valueContainer: fromValueContainer)
     } else if hasTo {
         let toValueContainer = try valueContainer.nestedContainer(
             keyedBy: ValueCodingKeys.self,
             forKey: .to
         )
-        return try decodeBelowDistance(valueContainer: toValueContainer)
+        return try decodeUnderQuantity(valueContainer: toValueContainer)
     }
 
     throw DecodingError.missingIntervalProperties(valueContainer)

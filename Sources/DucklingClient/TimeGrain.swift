@@ -1,5 +1,5 @@
 
-public enum TimeGrain: String {
+public enum TimeGrain: String, Equatable {
     case year
     case month
     case day
